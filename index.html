@@ -39,12 +39,46 @@
                         </div>
                     </a>
                 </div>
+                <div class="game-item" id="tic-tac-toe" style="display: none;">
+                    <h3>九宫格井字棋</h3>
+                    <div id="tic-tac-toe-board">
+                        <!-- 井字棋游戏的HTML结构 -->
+                    </div>
+                </div>
+                <button onclick="toggleGame('tic-tac-toe')" class="game-button">开始九宫格井字棋</button>
+
+                <div class="game-item" id="t-rex-game" style="display: none;">
+                    <h3>小恐龙游戏</h3>
+                    <div id="t-rex-game-board">
+                        <!-- 小恐龙游戏的HTML结构 -->
+                    </div>
+                </div>
+                <button id="trex-toggle-btn" class="game-button">开始小恐龙游戏</button>
             </div>
         </div>
     </div>
     <script src="script.js"></script>
-    <div id="xf-MusicPlayer" data-cdnName="https://player.xfyun.club/js"  data-themeColor="xf-wineRed" data-songChart="热歌榜"data-fadeOutAutoplaydata-lyrics="0"></div>
-<script src="https://player.xfyun.club/js/xf-MusicPlayer/js/xf-MusicPlayer.min.js"></script>
-<script src="https://player.xfyun.club/js/yinghua.js"></script>
+    <script>
+        function toggleGame(gameId) {
+            const gameElement = document.getElementById(gameId);
+            if (gameElement.style.display === 'none') {
+                gameElement.style.display = 'block';
+            } else {
+                gameElement.style.display = 'none';
+            }
+        }
+
+        // 井字棋游戏的JavaScript逻辑
+        // function initTicTacToe() {
+        //     // 初始化井字棋游戏
+        // }
+
+        // 谷歌小恐龙游戏的JavaScript逻辑
+        // function initTRexGame() {
+        //     // 初始化小恐龙游戏
+        // }
+    </script>
+    <!--樱花特效在线引入-->
+<script src="https://files.cnblogs.com/files/quaint/sakuraPlus.js"></script>
 </body>
 </html> 
