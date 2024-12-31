@@ -121,44 +121,38 @@ function initTicTacToe() {
 // 小恐龙游戏逻辑优化
 function initTRexGame() {
     const gameBoard = document.getElementById('t-rex-game-board');
+    gameBoard.innerHTML = ''; // 清空之前的内容
+    
     const dino = document.createElement('div');
+    dino.classList.add('dino');
+    gameBoard.appendChild(dino);
+    
     const scoreDisplay = document.createElement('div');
     scoreDisplay.classList.add('score-display');
     scoreDisplay.textContent = '得分: 0';
     gameBoard.appendChild(scoreDisplay);
     
-    // 添加太阳
     const sun = document.createElement('div');
     sun.classList.add('sun');
     gameBoard.appendChild(sun);
     
-    dino.classList.add('dino');
-    gameBoard.appendChild(dino);
-
     let isJumping = false;
     let position = 0;
     let score = 0;
     let gameSpeed = 5;
     let isGameOver = false;
     let obstacles = [];
-    let animationFrameId;
-    let lastJumpTime = 0;  // 记录上次跳跃时间
-    let jumpCount = 0;     // 跳跃次数计数
-    let jumpResetTimer = null;  // 跳跃重置定时器
-    const jumpCooldown = 30;    // 跳跃间隔时间（毫秒）
-    const maxJumps = 3;         // 最大连续跳跃次数
-    const jumpResetTime = 300;  // 跳跃次数重置时间（毫秒）
-
+    animationFrameId = null; // 确保使用全局变量
+    
     // 创建背景元素
-    function createBackgroundElements() {
-        // 创建更多云朵
-        for (let i = 0; i < 6; i++) {  // 增加到6朵云
+    function createBackground() {
+        // 创建云朵
+        for (let i = 0; i < 5; i++) {
             const cloud = document.createElement('div');
             cloud.classList.add('cloud');
             cloud.style.left = `${Math.random() * 100}%`;
             cloud.style.top = `${Math.random() * 40}%`;
-            // 随机设置不同的动画持续时间
-            const duration = 8 + Math.random() * 4; // 8-12秒之间随机
+            const duration = 10 + Math.random() * 5; // 10-15秒之间随机
             cloud.style.animationDuration = `${duration}s`;
             gameBoard.appendChild(cloud);
         }
@@ -168,7 +162,7 @@ function initTRexGame() {
             createCactus(600 + i * 300);
         }
     }
-
+    
     function createCactus(leftPosition) {
         const cactus = document.createElement('div');
         cactus.classList.add('cactus');
@@ -179,98 +173,40 @@ function initTRexGame() {
             position: leftPosition
         });
     }
-
-    // 跳跃逻辑优化
-    function jump(event) {
-        // 检查事件类型并阻止默认行为
-        if (event) {
-            event.preventDefault();
-        }
-
-        // 允许空格键、触摸和鼠标点击触发跳跃
-        if (!isGameOver && (
-            (event.code === 'Space') || 
-            event.type === 'touchstart' || 
-            event.type === 'click'
-        )) {
-            const currentTime = Date.now();
-            
-            // 检查跳跃间隔
-            if (currentTime - lastJumpTime < jumpCooldown) {
-                return;
-            }
-
-            // 检查跳跃次数
-            if (jumpCount >= maxJumps) {
-                return;
-            }
-
-            // 更新跳跃计数和时间
-            jumpCount++;
-            lastJumpTime = currentTime;
-
-            // 清除之前的重置定时器
-            if (jumpResetTimer) {
-                clearTimeout(jumpResetTimer);
-            }
-
-            // 设置新的重置定时器
-            jumpResetTimer = setTimeout(() => {
-                jumpCount = 0;
-            }, jumpResetTime);
-
-            isJumping = true;
-            let velocity = 20;  // 增加初始速度
-            let gravity = 0.6;  // 减小重力，使跳跃更轻盈
-            let maxHeight = 180;  // 增加最大高度
-            let currentPosition = position;
-            let targetHeight = Math.min(maxHeight, currentPosition + 150); // 增加每次跳跃的高度增量
-
-            // 如果是连续跳跃，增加额外的速度和高度
-            if (position > 0) {
-                velocity += 5;  // 连续跳跃时增加额外的初始速度
-                targetHeight = Math.min(maxHeight, currentPosition + 180); // 连续跳跃时增加更多高度
-            }
-
-            let lastTime = performance.now();
-
-            function jumpAnimation(currentTime) {
-                if (isGameOver) return;
-
-                const deltaTime = (currentTime - lastTime) / 16; // 基于60fps标准化时间差
-                lastTime = currentTime;
-
-                position += velocity * deltaTime;
-                velocity -= gravity * deltaTime;
-                
-                // 限制最大高度
-                if (position >= targetHeight) {
-                    position = targetHeight;
-                    velocity = -gravity * 3; // 增加下落初始速度
+    
+    // 跳跃功能
+    function jump() {
+        if (isJumping || isGameOver) return;
+        isJumping = true;
+        let velocity = 20;
+        const gravity = 0.8;
+        
+        function jumpStep() {
+            if (velocity > 0) {
+                position += velocity;
+                velocity -= gravity;
+                if (position >= 150) {
+                    velocity = -velocity / 2;
                 }
-                
-                // 着陆检测
+                dino.style.bottom = `${position}px`;
+                animationFrameId = requestAnimationFrame(jumpStep);
+            } else {
+                position += velocity;
+                velocity -= gravity;
                 if (position <= 0) {
                     position = 0;
-                    velocity = 0;
                     isJumping = false;
+                    cancelAnimationFrame(animationFrameId);
                 }
-
                 dino.style.bottom = `${position}px`;
-                dino.style.transform = `rotate(${velocity * 2}deg)`; // 添加旋转效果
-
-                if (isJumping) {
-                    requestAnimationFrame(jumpAnimation);
-                } else {
-                    dino.style.transform = 'rotate(0deg)'; // 重置旋转
-                }
+                animationFrameId = requestAnimationFrame(jumpStep);
             }
-
-            requestAnimationFrame(jumpAnimation);
         }
+        
+        jumpStep();
     }
-
-    // 障碍物移动逻辑优化
+    
+    // 障碍物移动
     function moveObstacles() {
         obstacles.forEach((obstacle, index) => {
             obstacle.position -= gameSpeed;
@@ -293,23 +229,21 @@ function initTRexGame() {
             }
         });
     }
-
-    // 优化碰撞检测
+    
+    // 碰撞检测
     function checkCollision(obstacle) {
         const dinoRect = dino.getBoundingClientRect();
         const obstacleRect = obstacle.getBoundingClientRect();
         
-        // 缩小碰撞判定区域，使游戏更友好
-        const collisionBuffer = 10;
-        
         return !(
-            dinoRect.right - collisionBuffer < obstacleRect.left + collisionBuffer || 
-            dinoRect.left + collisionBuffer > obstacleRect.right - collisionBuffer || 
-            dinoRect.bottom - collisionBuffer < obstacleRect.top + collisionBuffer || 
-            dinoRect.top + collisionBuffer > obstacleRect.bottom - collisionBuffer
+            dinoRect.right < obstacleRect.left ||
+            dinoRect.left > obstacleRect.right ||
+            dinoRect.bottom < obstacleRect.top ||
+            dinoRect.top > obstacleRect.bottom
         );
     }
-
+    
+    // 游戏结束
     function gameOver() {
         isGameOver = true;
         cancelAnimationFrame(animationFrameId);
@@ -325,7 +259,8 @@ function initTRexGame() {
         restartButton.addEventListener('click', restartGame);
         gameBoard.appendChild(restartButton);
     }
-
+    
+    // 重启游戏
     function restartGame() {
         // 清理旧障碍物
         obstacles.forEach(obstacle => obstacle.element.remove());
@@ -346,45 +281,35 @@ function initTRexGame() {
         if (restartButton) restartButton.remove();
         
         // 重新创建障碍物
-        for (let i = 0; i < 3; i++) {
-            createCactus(600 + i * 300);
-        }
-        
-        // 重置跳跃相关状态
-        jumpCount = 0;
-        lastJumpTime = 0;
-        if (jumpResetTimer) {
-            clearTimeout(jumpResetTimer);
-        }
+        createBackground();
         
         // 重新开始游戏循环
         gameLoop();
     }
-
+    
+    // 游戏循环
     function gameLoop() {
         if (!isGameOver) {
             moveObstacles();
             animationFrameId = requestAnimationFrame(gameLoop);
         }
     }
-
+    
     // 初始化游戏
-    createBackgroundElements();
+    createBackground();
+    gameLoop();
     
-    // 添加所有事件监听器
-    document.addEventListener('keydown', jump);
-    gameBoard.addEventListener('touchstart', jump);
-    gameBoard.addEventListener('click', jump);
+    // 监听跳跃事件
+    document.addEventListener('keydown', function(event) {
+        if (event.code === 'Space') {
+            event.preventDefault();
+            jump();
+        }
+    });
     
-    // 防止触摸事件的默认行为（如滚动）
-    gameBoard.addEventListener('touchmove', function(event) {
-        event.preventDefault();
-    }, { passive: false });
-
-    // 延迟开始游戏
-    setTimeout(() => {
-        gameLoop();
-    }, 500);
+    gameBoard.addEventListener('click', function() {
+        jump();
+    });
 }
 
 // 页面加载时初始化游戏
@@ -406,24 +331,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function toggleGame(gameId) {
     const gameElement = document.getElementById(gameId);
-    const isHidden = gameElement.style.display === 'none';
-    
-    // 如果是小恐龙游戏且正在进行中，则不允许隐藏
-    if (gameId === 't-rex-game' && !isHidden && !isGameOver) {
-        return;
-    }
-    
-    if (isHidden) {
+    const button = gameId === 't-rex-game' ? 
+        document.getElementById('trex-toggle-btn') : 
+        document.querySelector(`button[onclick="toggleGame('${gameId}')"]`);
+
+    if (!gameElement) return;
+
+    if (gameElement.style.display === 'none') {
         gameElement.style.display = 'block';
-    } else {
-        // 如果是小恐龙游戏，确保游戏结束后再隐藏
+        button.textContent = `结束${gameId === 't-rex-game' ? '小恐龙游戏' : '九宫格井字棋'}`;
         if (gameId === 't-rex-game') {
-            isGameOver = true;
-            cancelAnimationFrame(animationFrameId);
+            initTRexGame();
+        } else {
+            initTicTacToe();
         }
+    } else {
         gameElement.style.display = 'none';
+        button.textContent = `开始${gameId === 't-rex-game' ? '小恐龙游戏' : '九宫格井字棋'}`;
+        if (gameId === 't-rex-game') {
+            stopTRexGame();
+        }
     }
 }
+
+// 修改停止游戏的函数
+function stopTRexGame() {
+    const gameBoard = document.getElementById('t-rex-game-board');
+    if (gameBoard) {
+        gameBoard.innerHTML = '';
+        // 清除所有相关的定时器和动画
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+    }
+}
+
+// 修改页面加载时的初始化
+document.addEventListener('DOMContentLoaded', () => {
+    // 初始化游戏按钮状态
+    const ticTacToeBtn = document.querySelector('button[onclick="toggle(\'tic-tac-toe\')"]');
+    const trexBtn = document.getElementById('trex-toggle-btn');
+    
+    if (ticTacToeBtn) {
+        ticTacToeBtn.textContent = '开始九宫格井字棋';
+    }
+    if (trexBtn) {
+        trexBtn.textContent = '开始小恐龙游戏';
+    }
+});
 
 // 修改事件监听器，阻止空格键的默认行为
 document.addEventListener('keydown', function(event) {

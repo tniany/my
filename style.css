@@ -16,10 +16,16 @@ body {
     max-width: 800px;
     margin: 50px auto;
     padding: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .profile {
-    background: rgba(255, 255, 255, 0.7);
+    position: relative;
+    padding-top: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: 10px;
@@ -31,6 +37,8 @@ body {
 .avatar {
     text-align: center;
     margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .avatar img {
@@ -61,7 +69,7 @@ h1, h2 {
     border-radius: 8px;
     backdrop-filter: blur(10px) saturate(160%);
     -webkit-backdrop-filter: blur(10px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 0, 0, 0.2);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -101,6 +109,7 @@ h1, h2 {
     -webkit-backdrop-filter: blur(5px);
     display: block;
     position: relative;
+    border: 1px solid rgba(255, 0, 0, 0.2);
 }
 
 .site-item a:hover {
@@ -268,22 +277,84 @@ h1, h2 {
 /* 小恐龙游戏样式优化 */
 #t-rex-game-board {
     position: relative;
-    height: 250px;
-    background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+    height: 300px;
+    background: linear-gradient(to bottom, #a8e6ff, #e3f6ff);
     overflow: hidden;
     margin: 20px auto;
     border-radius: 15px;
-    box-shadow: inset 0 -20px 0 #8B4513;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 }
 
 .dino {
     width: 50px;
     height: 50px;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,20 L70,40 L60,50 L80,60 L70,80 L30,80 L20,60 L40,50 L30,40 Z" fill="%23333"/></svg>') no-repeat center/contain;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,20 L70,40 L60,50 L80,60 L70,80 L30,80 L20,60 L40,50 L30,40 Z" fill="%231a1a1a"/></svg>') no-repeat center/contain;
     position: absolute;
-    bottom: 20px;
+    bottom: 0;
     left: 50px;
-    transition: transform 0.2s ease;
+    transition: bottom 0.3s ease, transform 0.3s ease;
+}
+
+/* 新增云朵样式 */
+.cloud {
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    animation: moveCloud 10s linear infinite;
+    opacity: 0.8;
+    z-index: 1;
+}
+
+/* 创建仙人掌样式 */
+.cactus {
+    position: absolute;
+    bottom: 0;
+    width: 40px;
+    height: 60px;
+    background: #2d3436;
+    border-radius: 5px;
+    animation: moveObstacle linear infinite;
+}
+
+/* 动画效果 */
+@keyframes moveCloud {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-100px); }
+}
+
+@keyframes moveObstacle {
+    from { left: 100%; }
+    to { left: -50px; }
+}
+
+/* 得分显示样式 */
+.score-display {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 white;
+    font-family: 'Microsoft YaHei', sans-serif;
+}
+
+/* 游戏结束显示样式 */
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #e74c3c;
+    font-family: 'Microsoft YaHei', sans-serif;
 }
 
 /* 游戏按钮样式 */
@@ -291,7 +362,7 @@ h1, h2 {
     display: block;
     margin: 15px auto;
     padding: 12px 25px;
-    background: linear-gradient(135deg, #6e8efb, #4a6ee0);
+    background: linear-gradient(135deg, #ff4d4d, #ff0000);
     color: white;
     border: none;
     border-radius: 25px;
@@ -299,16 +370,19 @@ h1, h2 {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-family: "楷体", KaiTi, serif;
+    min-width: 200px;
 }
 
 .game-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.25);
+    background: linear-gradient(135deg, #ff0000, #d4145a);
 }
 
 .game-button:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 10px rgba(255, 0, 0, 0.15);
 }
 
 /* 井字棋状态显示样式 */
@@ -733,4 +807,292 @@ h1, h2 {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 50%;
     filter: blur(2px);
+}
+
+/* 节日装饰样式 */
+.festival-decorations {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* 灯笼样式 */
+.lanterns-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.lantern {
+    width: 60px;
+    height: 80px;
+    background: linear-gradient(135deg, #ff9c9c, #ff0000);
+    border-radius: 30px;
+    position: relative;
+    animation: swingLantern 3s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.lantern::before {
+    content: "福";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: gold;
+    font-size: 28px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.lantern::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 25px;
+    background: gold;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 灯笼顶部装饰 */
+.lantern-top {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 10px;
+    background: #8b0000;
+    border-radius: 5px 5px 0 0;
+}
+
+/* 灯笼底部装饰 */
+.lantern-bottom {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 10px;
+    background: #8b0000;
+    border-radius: 0 0 5px 5px;
+}
+
+/* 掉落动画 */
+@keyframes lanternFall {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+}
+
+/* 彩带样式 */
+.ribbon {
+    position: fixed;
+    width: 4px;
+    height: 0;
+    background: linear-gradient(45deg, #ff0000, #ffd700, #ff69b4);
+    transform-origin: top;
+    z-index: 1000;
+}
+
+@keyframes ribbonDrop {
+    0% {
+        height: 0;
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        height: 100vh;
+        transform: translateY(0) rotate(5deg);
+    }
+}
+
+/* 新年祝福文字抖动动画 */
+@keyframes shake {
+    0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+    25% { transform: translate(-50%, -50%) rotate(-5deg); }
+    75% { transform: translate(-50%, -50%) rotate(5deg); }
+}
+
+/* 修改对联样式 */
+.couplet {
+    position: fixed;
+    padding: 20px;
+    background: rgba(255, 0, 0, 0.8);
+    color: gold;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "楷体", KaiTi, serif;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+    border-radius: 5px;
+    height: auto;
+    transition: opacity 0.5s ease;
+}
+
+.couplet.left {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.couplet.right {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.couplet.horizontal {
+    writing-mode: horizontal-tb;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 30px;
+}
+
+/* 雪花效果 */
+.snowflake {
+    position: fixed;
+    color: #fff;
+    font-size: 20px;
+    animation: fall linear infinite;
+}
+
+/* 动画效果 */
+@keyframes swingLantern {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
+/* 添加横幅样式 */
+.festival-banner {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(45deg, #d4145a, #ff0000);
+    padding: 5px 30px;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(255, 0, 0, 0.3);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 180px;
+}
+
+.banner-text {
+    color: #FFD700;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "楷体", KaiTi, serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+}
+
+.banner-text-small {
+    color: #FFD700;
+    font-size: 18px;
+    font-family: "楷体", KaiTi, serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    margin-top: 2px;
+}
+
+/* 游戏按钮容器样式 */
+.game-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 15px auto;
+    flex-wrap: wrap;
+}
+
+/* 更新游戏按钮样式 */
+.game-button {
+    flex: 0 1 auto;
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #ff4d4d, #ff0000);
+    color: #FFD700;
+    border: 1px solid #FFD700;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.2);
+    font-family: "楷体", KaiTi, serif;
+    min-width: 200px;
+}
+
+.game-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.25);
+    background: linear-gradient(135deg, #ff0000, #d4145a);
+}
+
+.game-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(255, 0, 0, 0.15);
+}
+
+/* 修改游戏区域样式 */
+.game-item {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ff0000;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.1);
+}
+
+.game-item h3 {
+    color: #ff0000;
+    font-family: "楷体", KaiTi, serif;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(255, 0, 0, 0.1);
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 600px) {
+    .festival-banner {
+        padding: 5px 20px;
+        min-width: 140px;
+    }
+
+    .banner-text {
+        font-size: 20px;
+    }
+
+    .banner-text-small {
+        font-size: 16px;
+    }
+
+    .game-buttons-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .game-button {
+        width: 100%;
+        max-width: 300px;
+    }
 } 
