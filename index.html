@@ -8,6 +8,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
+    <div class="festival-decorations">
+        <div class="lanterns-container">
+            <div class="lantern">
+                <div class="lantern-top"></div>
+                <div class="lantern-bottom"></div>
+            </div>
+            <div class="lantern">
+                <div class="lantern-top"></div>
+                <div class="lantern-bottom"></div>
+            </div>
+            <div class="lantern">
+                <div class="lantern-top"></div>
+                <div class="lantern-bottom"></div>
+            </div>
+            <div class="lantern">
+                <div class="lantern-top"></div>
+                <div class="lantern-bottom"></div>
+            </div>
+        </div>
+        <div class="fireworks-container"></div>
+        <div class="snow-container"></div>
+    </div>
+    <div class="couplets">
+        <div class="couplet left">新年纳福迎春至</div>
+        <div class="couplet horizontal">万事如意庆有余</div>
+        <div class="couplet right">佳节开门送喜来</div>
+    </div>
     <div class="container">
         <div class="profile">
             <div class="avatar">
@@ -35,7 +62,7 @@
                         <span class="site-name">糖念梦幻-我的世界</span>
                         <span class="site-desc">让我们一起在梦幻的世界中遨游吧！</span>
                         <div class="site-preview">
-                            <iframe src="http://www.tniay.cn" frameborder="0" loading="lazy"></iframe>
+                            <iframe src="http://www.tniay.cn" frameborder="0" loading="lazy" allowfullscreen></iframe>
                         </div>
                     </a>
                 </div>
@@ -45,15 +72,16 @@
                         <!-- 井字棋游戏的HTML结构 -->
                     </div>
                 </div>
-                <button onclick="toggleGame('tic-tac-toe')" class="game-button">开始九宫格井字棋</button>
-
                 <div class="game-item" id="t-rex-game" style="display: none;">
                     <h3>小恐龙游戏</h3>
                     <div id="t-rex-game-board">
-                        <!-- 小恐龙游戏的HTML结构 -->
+                        <!-- 小恐龙游戏的HTML结构将由JavaScript动态生成 -->
                     </div>
                 </div>
-                <button id="trex-toggle-btn" class="game-button">开始小恐龙游戏</button>
+                <div class="game-buttons-container">
+                    <button onclick="toggleGame('tic-tac-toe')" class="game-button">开始九宫格井字棋</button>
+                    <button onclick="toggleGame('t-rex-game')" class="game-button" id="trex-toggle-btn">开始小恐龙游戏</button>
+                </div>
             </div>
         </div>
     </div>
@@ -77,8 +105,18 @@
         // function initTRexGame() {
         //     // 初始化小恐龙游戏
         // }
+
+        // 处理外部脚本加载错误
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            if (url.includes('mczfw.js') || url.includes('minecraft.min.js')) {
+                // 忽略这些外部脚本的错误
+                return true;
+            }
+            return false;
+        };
     </script>
     <!--樱花特效在线引入-->
 <script src="https://files.cnblogs.com/files/quaint/sakuraPlus.js"></script>
+    <script src="festival.js"></script>
 </body>
 </html> 
