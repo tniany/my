@@ -6,6 +6,39 @@
     <title>tniay-Iam</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- 添加防调试代码 -->
+    <script>
+        // 禁用右键菜单
+        document.oncontextmenu = function(){ return false; };
+        
+        // 禁用F12、Ctrl+Shift+I、Ctrl+Shift+J、Ctrl+U
+        document.onkeydown = function(e) {
+            if (e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
+                (e.ctrlKey && e.shiftKey && e.keyCode === 74) ||
+                (e.ctrlKey && e.keyCode === 85)) {
+                return false;
+            }
+        };
+        
+        // 禁用开发者工具
+        (function() {
+            let devtools = function() {};
+            devtools.toString = function() {
+                return '检测到调试行为';
+            }
+            console.log('%c', devtools);
+            
+            setInterval(function() {
+                const widthThreshold = window.outerWidth - window.innerWidth > 160;
+                const heightThreshold = window.outerHeight - window.innerHeight > 160;
+                if (widthThreshold || heightThreshold) {
+                    document.body.innerHTML = '';
+                }
+            }, 1000);
+        })();
+    </script>
 </head>
 <body>
     <div class="festival-decorations">
